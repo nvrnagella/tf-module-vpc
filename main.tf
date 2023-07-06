@@ -3,5 +3,5 @@ resource "aws_vpc" "main" {
   tags = merge{
     local.common_tags,
     { Name = "${var.env}-vpc" }
-}
+  }
 }
