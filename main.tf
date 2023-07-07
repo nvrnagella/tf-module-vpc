@@ -63,6 +63,10 @@ resource "aws_route_table_association" "public-rt-assoc" {
 resource "aws_eip" "ngw-eip" {
   vpc = true
 }
+resource "aws_nat_gateway" "ngw" {
+  subnet_id = aws_subnet.public.*.id[0]
+  allocation_id = aws_eip.ngw-eip.id
+}
 #//Create EC2
 #data "aws_ami" "centos8" {
 #  most_recent = true
