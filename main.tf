@@ -14,3 +14,8 @@ resource "aws_subnet" "main" {
     { Name = "${var.env}-subnet-${count.index+1}" }
   )
 }
+resource "aws_vpc_peering_connection" "peer" {
+  peer_owner_id = data.aws_caller_identity.current.account_id
+  peer_vpc_id = "vpc-08e995b10822fe62f"
+  vpc_id      = aws_vpc.main.id
+}
