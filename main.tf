@@ -66,6 +66,10 @@ resource "aws_eip" "ngw-eip" {
 resource "aws_nat_gateway" "ngw" {
   subnet_id = aws_subnet.public.*.id[0]
   allocation_id = aws_eip.ngw-eip.id
+  tags = merge(
+    local.common_tags,
+    { Name = "${var.env}-ngw" }
+  )
 }
 #//Create EC2
 #data "aws_ami" "centos8" {
