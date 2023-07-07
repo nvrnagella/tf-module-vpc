@@ -107,7 +107,7 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro"
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
   subnet_id = aws_subnet.private.*.id[0]
-  availability_zone = "us-east-1a"
+  availability_zone = "us-east-1e"
   tags = {
     Name = "test-centos8"
   }
