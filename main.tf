@@ -86,6 +86,11 @@ resource "aws_route_table" "private" {
     { Name = "${var.env}-private-route-table" }
   )
 }
+resource "aws_route_table_association" "private-rt-assoc" {
+  count = length(aws_subnet.private)
+  subnet_id = aws_subnet.private.*.id[count.index]
+  route_table_id = aws_route_table.private.id
+}
 #//Create EC2
 #data "aws_ami" "centos8" {
 #  most_recent = true
