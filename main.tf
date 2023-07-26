@@ -32,6 +32,7 @@ resource "aws_internet_gateway" "gw" {
 resource "aws_eip" "ngw-eip" {
   vpc = true
 }
+/*
 resource "aws_nat_gateway" "ngw" {
   count         = var.nat_gw ? 1 : 0
   allocation_id = aws_eip.ngw-eip.id
@@ -41,4 +42,4 @@ resource "aws_nat_gateway" "ngw" {
     local.common_tags,
     { Name = "${var.env}-ngw" }
   )
-}
+}*/
