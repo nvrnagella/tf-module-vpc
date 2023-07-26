@@ -5,6 +5,25 @@ resource "aws_vpc" "main" {
     { Name = "${var.env}-vpc" }
   )
 }
+resource "aws_vpc_peering_connection" "peer" {
+  peer_owner_id = data.aws_caller_identity.current.account_id
+  peer_vpc_id = var.default_vpc_id
+  vpc_id      = aws_vpc.main.id
+  auto_accept = true
+
+  tags = merge(
+    local.common_tags,
+    { Name = "${var.env}-peering" }
+  )
+}
+resource "aws_route" "r" {
+  route_table_id = data.aws_vpc.default.main_route_table_id
+  destination_cidr_block = var.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+}
+
+
+
 resource "aws_subnet" "public" {
   count = length(var.public_subnets_cidr)
   vpc_id = aws_vpc.main.id
@@ -27,17 +46,7 @@ resource "aws_subnet" "private" {
     { Name = "${var.env}-private-subnet-${count.index+1}" }
   )
 }
-resource "aws_vpc_peering_connection" "peer" {
-  peer_owner_id = data.aws_caller_identity.current.account_id
-  peer_vpc_id = var.default_vpc_id
-  vpc_id      = aws_vpc.main.id
-  auto_accept = true
 
-  tags = merge(
-    local.common_tags,
-    { Name = "${var.env}-peering" }
-  )
-}
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -104,11 +113,7 @@ resource "aws_route_table_association" "private-rt-assoc" {
   subnet_id = aws_subnet.private.*.id[count.index]
   route_table_id = aws_route_table.private.id
 }
-resource "aws_route" "r" {
-  route_table_id = data.aws_vpc.default.main_route_table_id
-  destination_cidr_block = var.cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
-}
+
 //Create EC2
 data "aws_ami" "centos8" {
   most_recent = true
