@@ -15,7 +15,7 @@ module "public_subnets" {
   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
   tags                      = local.common_tags
   gateway_id                = aws_internet_gateway.gw.id
-  nat_gw_id                 = aws_nat_gateway.ngw.id
+//  nat_gw_id                 = aws_nat_gateway.ngw.id//i am sending only gateway id to avoid cycle error
 }
 module "private_subnets" {
   source = "./subnets"
@@ -33,6 +33,6 @@ module "private_subnets" {
   vpc_id                    = aws_vpc.main.id
   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
   tags                      = local.common_tags
-  gateway_id                = aws_internet_gateway.gw.id
+  //gateway_id                = aws_internet_gateway.gw.id// i am sending only nat_gw_id to avoid cycle problem
   nat_gw_id                 = aws_nat_gateway.ngw.id
 }
