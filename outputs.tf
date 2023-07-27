@@ -8,6 +8,3 @@ output "vpc_peering_connection_id" {
 output "public_subnet_ids" {
   value = module.public_subnets
 }
-output "one_subnet_id" {
-  value = module.public_subnets["public"]["subnet_ids"][0]
-}
